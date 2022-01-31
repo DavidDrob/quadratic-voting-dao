@@ -7,8 +7,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "axios": "^0.25.0",
+    "dotenv": "^14.3.2",
+    "mongoose": "^6.1.8",
+    "realm-web": "^1.6.0",
     "vue": "^3.2.25",
-    "vue-router": "^4.0.12"
+    "vue-router": "^4.0.12",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.0.0",

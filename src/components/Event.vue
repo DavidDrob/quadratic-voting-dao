@@ -3,7 +3,7 @@
     <div class="flex">
       <div class="pb-4">
         <h2 class="text-xl">Title</h2>
-        <p class="w-11/12">
+        <p class="w-11/12 bg-red-500">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem aut nemo
           accusantium minima deleniti beatae, esse veritatis fuga optio debitis
           perspiciatis excepturi qui harum autem similique labore temporibus

@@ -14,7 +14,7 @@
     <div>
       <div class="pb-4">
         <h2 class="text-xl">Description</h2>
-        <p class="w-10/12">
+        <p>
           Doloribus ea exercitationem vitae exercitationem. Adipisci eos
           temporibus magnam recusandae aut est. Voluptatem in inventore minus
           numquam deserunt. Sunt maxime excepturi tenetur iste veniam. Qui illum

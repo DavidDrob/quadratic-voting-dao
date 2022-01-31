@@ -27,6 +27,7 @@
       </div>
     </main>
 
+    <p>{{ sampleData }}</p>
     <router-view></router-view>
   </div>
 
@@ -51,6 +52,7 @@
 <script>
 import EventCardVue from "./components/EventCard.vue";
 import DaoCard from "./components/DaoCard.vue";
+import { mapState } from "vuex";
 
 export default {
   name: "EventCard",
@@ -58,5 +60,10 @@ export default {
     EventCardVue,
     DaoCard,
   },
+  mounted() {
+    console.log(this.$store.state.count);
+    this.$store.dispatch("getAllData");
+  },
+  computed: mapState(["sampleData"]),
 };
 </script>

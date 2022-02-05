@@ -1,18 +1,15 @@
 <template>
-  <div class="rounded-2xl my-4 py-4 pl-4 border-2 border-stone-200">
+  <div class="rounded-2xl my-4 p-4 border-2 border-stone-200">
     <div class="flex">
-      <div class="pb-4">
-        <h2 class="text-xl">Title</h2>
-        <p class="w-11/12">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem aut nemo
-          accusantium minima deleniti beatae, esse veritatis fuga optio debitis
-          perspiciatis excepturi qui harum autem similique labore temporibus
-          eius voluptatibus!
+      <div class="pb-4 w-11/12">
+        <h2 class="text-xl">{{ title }}</h2>
+        <p class="">
+          {{ description }}
         </p>
       </div>
-      <div class="w-2/4 h-min">
+      <div class="h-min">
         <h2 class="text-xl">Time left</h2>
-        <p>32 hours</p>
+        <p>{{ timeLeft }}</p>
       </div>
     </div>
     <div class="flex w-full">
@@ -20,7 +17,7 @@
         <h2 class="text-xl">Current Results</h2>
         <progress class="w-full"></progress>
       </div>
-      <router-link class="ml-auto mr-6" :to="this.$route.path + '/' + this._id">
+      <router-link class="ml-auto" :to="this.$route.path + '/' + this._id">
         <SubmitButton title="Vote" />
       </router-link>
     </div>
@@ -29,16 +26,39 @@
 
 <script>
 import SubmitButton from "../components/SubmitButton.vue";
+import convertMS from "../utils/convertMS";
 
 export default {
   name: "DAO Page",
   data() {
     return {
       _id: "0",
+      remainingTime: null,
     };
   },
+  props: ["title", "description", "end", "options"],
   components: {
     SubmitButton,
+  },
+  mounted() {
+    const end = new Date(this.end);
+    this.remainingTime = new Date().getTime() - end.getTime();
+  },
+  computed: {
+    timeLeft() {
+      if (this.remainingTime <= 0) {
+        return "Voting ended";
+      } else if (convertMS(this.remainingTime).day >= 2) {
+        return `${convertMS(this.remainingTime).day} days`;
+      } else if (
+        convertMS(this.remainingTime).hour <= 1 &&
+        convertMS(this.remainingTime).day > 1
+      ) {
+        return `${convertMS(this.remainingTime).minute} minutes`;
+      } else {
+        return `${convertMS(this.remainingTime).hour} hours`;
+      }
+    },
   },
 };
 </script>

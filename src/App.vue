@@ -1,6 +1,6 @@
 
 <template>
-  <div class="bg-zinc-700 text-zinc-100 h-screen">
+  <div class="text-zinc-100">
     <!-- <h1>{{ blockHeight }}</h1>
     <h1>{{ daoData }}</h1> -->
     <main
@@ -8,17 +8,17 @@
         bg-gradient-to-tr
         from-emerald-500
         to-teal-600
-        w-screen
+        w-full
         grid
         place-items-center
-        py-24
+        py-16
       "
     >
       <div class="flex flex-col items-center">
         <h1 class="text-4xl font-semibold text-center">
           <router-link to="/"> Covalent Quadratic Voting App </router-link>
         </h1>
-        <h2 class="text-lg mt-6 border-b-2 border-sky-700">
+        <h2 class="text-lg mt-6 border-b-2 border-green-500">
           <a
             href="https://wtfisqf.com/
         "
@@ -49,3 +49,9 @@ export default {
   computed: mapState(["blockHeight", "daoData"]),
 };
 </script>
+
+<style>
+body {
+  background: rgb(21, 22, 24);
+}
+</style>

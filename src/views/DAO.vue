@@ -1,9 +1,16 @@
 <template>
   <div class="w-2/3 m-auto mt-10" style="height: 60%">
-    <DaoHead />
+    <DaoHead :name="headerData.name" :logo="headerData.logo" />
     <div class="m-4 mt-8 flex flex-col justify-center">
       <h2 class="text-2xl">Current Processes</h2>
-      <Event />
+      <Event
+        v-for="(voting, index) in daoVotings"
+        :key="index"
+        :title="voting.name"
+        :description="voting.description"
+        :end="voting.end"
+        :options="voting.options"
+      />
       <div
         class="
           rounded-2xl
@@ -17,7 +24,7 @@
         "
       >
         <svg
-          class="w-6 h-6"
+          class="w-10 h-10"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -39,13 +46,37 @@
 
 <script>
 import Event from "../components/Event.vue";
+import { mapState } from "vuex";
 import DaoHead from "../components/DaoHead.vue";
 
 export default {
   name: "DAO Page",
+  data() {
+    return {
+      daoVotings: [],
+      headerData: {},
+    };
+  },
   components: {
     Event,
     DaoHead,
   },
+  async mounted() {
+    const votingResponse = await this.$store.dispatch(
+      "getAllDAOVotings",
+      this.$route.params.address
+    );
+    this.daoVotings = votingResponse.votings;
+
+    if (this.daoData.length == 0)
+      await this.$store.dispatch("getBasicDAOData", this.$route.params.address);
+
+    for (const i in this.daoData) {
+      if (this.daoData[i].address == this.$route.params.address) {
+        this.headerData = this.daoData[i];
+      }
+    }
+  },
+  computed: mapState(["daoData"]),
 };
 </script>

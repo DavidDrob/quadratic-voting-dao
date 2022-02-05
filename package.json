@@ -11,6 +11,7 @@
     "dotenv": "^14.3.2",
     "mongoose": "^6.1.8",
     "realm-web": "^1.6.0",
+    "redaxios": "^0.4.1",
     "vue": "^3.2.25",
     "vue-router": "^4.0.12",
     "vuex": "^4.0.2"

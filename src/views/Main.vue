@@ -1,33 +1,39 @@
 <template>
   <div class="w-2/3 m-auto flex justify-between items-center mt-24 flex-wrap">
     <DaoCard
-      title="0x32934dA17622faEb1F8c9fAb354fc194cF8e4378"
-      logoUrl="logo"
-      buttonTitle="View"
-      link="0xde30da39c46104798bb5aa3fe8b9e0e1f348163f"
+      v-for="(dao, index) in daoData"
+      :key="index"
+      :title="dao.name"
+      :logoUrl="dao.logo"
+      :symbol="dao.symbol"
+      :link="dao.address"
     />
-    <DaoCard
-      title="Vue DAO"
-      logoUrl="logo"
-      buttonTitle="View"
-      link="0xde30da39c46104798bb5aa3fe8b9e0e1f348163f"
-    />
-    <DaoCard
-      title="Vue DAO"
-      logoUrl="logo"
-      buttonTitle="View"
-      link="0xde30da39c46104798bb5aa3fe8b9e0e1f348163f"
-    />
+    <!-- <DaoCard
+      title="Add new DAO"
+      logoUrl="dao.logo"
+      symbol="Add"
+      link="new"
+    /> -->
   </div>
 </template>
 
 <script>
 import DaoCard from "../components/DaoCard.vue";
+import { mapState } from "vuex";
+import { daos } from "../utils/daos.json";
 
 export default {
   name: "EventCard",
   components: {
     DaoCard,
   },
+  async mounted() {
+    if (daos.length > this.daoData) {
+      for (const daoAddress in daos) {
+        await this.$store.dispatch("getBasicDAOData", daos[daoAddress]);
+      }
+    }
+  },
+  computed: mapState(["daoData"]),
 };
 </script>

@@ -7,34 +7,26 @@
         cursor-pointer
         rounded-2xl
         w-60
-        h-96
-        flex
-        justify-between
-        py-6
-        flex-col
-        items-center
+        mb-4
+        flex flex-col
         break-words
       "
     >
-      <div class="flex w-full px-4 items-center">
+      <div class="flex w-full px-4 py-6 items-center">
         <img class="w-12 h-12" :src="getFullUrl" />
-        <p class="font-semibold text-xl pl-3" v-if="!isNotENS">{{ title }}</p>
-        <p class="font-semibold text-xl pl-3" v-else>
-          {{ `${title.substring(0, 5)} ... ${title.substring(38)}` }}
-        </p>
-      </div>
-      <div class="w-full px-4">
-        <h2 class="font-light">latest activity</h2>
-        <h3 class="font-medium">01.01.1970</h3>
+        <p class="font-semibold text-xl pl-3">{{ title }} ({{ symbol }})</p>
       </div>
       <div class="w-full px-4">
         <h2 class="font-light">voting processes</h2>
-        <h3 class="font-medium">2 running</h3>
-        <h3 class="font-medium">4 ended</h3>
+        <h3 class="font-medium">{{ totalVotings - endedVotings }} running</h3>
+        <h3 class="font-medium">{{ endedVotings }} ended</h3>
       </div>
-      <router-link :to="link">
-        <SubmitButton :title="buttonTitle" />
-      </router-link>
+      <div class="w-full py-6 flex justify-center">
+        <router-link :to="link">
+          <!-- bind to `symbol` -->
+          <SubmitButton title="Vote" />
+        </router-link>
+      </div>
     </div>
   </router-link>
 </template>
@@ -44,19 +36,30 @@ import SubmitButton from "./SubmitButton.vue";
 
 export default {
   name: "DaoCard",
-  props: ["logoUrl", "title", "buttonTitle", "link"],
+  data() {
+    return {
+      totalVotings: 0,
+      endedVotings: 0,
+    };
+  },
+  props: ["logoUrl", "title", "symbol", "link"],
   components: {
     SubmitButton,
   },
   computed: {
     getFullUrl() {
-      return new URL(`../assets/${this.logoUrl}.png`, import.meta.url).href;
+      return this.logoUrl;
     },
-    isNotENS() {
-      if (this.title.substring(0, 2) == "0x" && this.title.length === 42)
-        return true;
-      return false;
-    },
+  },
+  async mounted() {
+    const response = await this.$store.dispatch("getAllDAOVotings", this.link);
+
+    // Check if voting has already ended
+    this.totalVotings = response.votings.length;
+    for (const voting in response.votings) {
+      const voteEnding = new Date(response.votings[voting].end);
+      if (Date.now() > voteEnding.getTime()) this.endedVotings += 1;
+    }
   },
 };
 </script>

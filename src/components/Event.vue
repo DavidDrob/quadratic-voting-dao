@@ -15,7 +15,7 @@
     <div class="flex w-full">
       <div class="w-1/3">
         <h2 class="text-xl">Current Results</h2>
-        <progress class="w-full"></progress>
+        <ProgressBar :options="options" />
       </div>
       <router-link class="ml-auto" :to="this.$route.path + '/' + this.title">
         <SubmitButton title="Vote" />
@@ -26,6 +26,7 @@
 
 <script>
 import SubmitButton from "../components/SubmitButton.vue";
+import ProgressBar from "../components/process/ProgressBar.vue";
 import convertMS from "../utils/convertMS";
 
 export default {
@@ -38,6 +39,7 @@ export default {
   props: ["title", "description", "end", "options"],
   components: {
     SubmitButton,
+    ProgressBar,
   },
   mounted() {
     const end = new Date(this.end);

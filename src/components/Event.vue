@@ -3,7 +3,7 @@
     <div class="flex">
       <div class="pb-4 w-11/12">
         <h2 class="text-xl">{{ title }}</h2>
-        <p class="">
+        <p class="pr-4">
           {{ description }}
         </p>
       </div>
@@ -17,7 +17,7 @@
         <h2 class="text-xl">Current Results</h2>
         <progress class="w-full"></progress>
       </div>
-      <router-link class="ml-auto" :to="this.$route.path + '/' + this._id">
+      <router-link class="ml-auto" :to="this.$route.path + '/' + this.title">
         <SubmitButton title="Vote" />
       </router-link>
     </div>
@@ -32,7 +32,6 @@ export default {
   name: "DAO Page",
   data() {
     return {
-      _id: "0",
       remainingTime: null,
     };
   },

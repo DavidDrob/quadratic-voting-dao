@@ -2,7 +2,7 @@
   <div class="rounded-2xl my-4 p-4 border-2 border-stone-200 w-3/12">
     <div class="flex justify-between">
       <p>Author</p>
-      <p>0x ...</p>
+      <p>{{ author }}</p>
     </div>
     <div class="flex justify-between">
       <p>Start</p>
@@ -26,7 +26,8 @@
     </div>
     <div class="flex justify-between">
       <p>Limited</p>
-      <p>Yes</p>
+      <p v-if="limited">Yes</p>
+      <p v-else>No</p>
     </div>
     <hr class="mt-4 mb-2" />
     <p class="mb-2">Allowed voters</p>
@@ -70,5 +71,6 @@
 <script>
 export default {
   name: "Voting Details",
+  props: ["author", "start", "end", "limited", "allowed"],
 };
 </script>

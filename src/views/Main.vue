@@ -1,5 +1,7 @@
 <template>
-  <div class="w-2/3 m-auto flex justify-between items-center mt-24 flex-wrap">
+  <div
+    class="w-2/3 m-auto flex justify-center md:justify-between mt-24 flex-wrap"
+  >
     <DaoCard
       v-for="(dao, index) in daoData"
       :key="index"
@@ -8,7 +10,7 @@
       :symbol="dao.symbol"
       :link="dao.address"
     />
-    <router-link to="link">
+    <router-link to="create" test="some value">
       <div
         class="
           border-2 border-stone-200
@@ -30,7 +32,7 @@
           <h3 class="font-medium">Click below and start a new voting</h3>
         </div>
         <div class="w-full py-6 flex justify-center">
-          <router-link to="link">
+          <router-link to="create" test="some value">
             <!-- bind to `symbol` -->
             <SubmitButton title="Add" />
           </router-link>

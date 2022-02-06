@@ -3,8 +3,7 @@
     class="
       rounded-2xl
       my-4
-      py-4
-      pl-4
+      p-4
       border-2 border-stone-200
       w-8/12
       flex flex-col
@@ -13,29 +12,54 @@
   >
     <div>
       <div class="pb-4">
-        <h2 class="text-xl">Description</h2>
+        <h2 class="text-xl pb-2">{{ name }}</h2>
         <p>
-          Doloribus ea exercitationem vitae exercitationem. Adipisci eos
-          temporibus magnam recusandae aut est. Voluptatem in inventore minus
-          numquam deserunt. Sunt maxime excepturi tenetur iste veniam. Qui illum
-          iure aut. Dolore exercitationem enim enim. Corporis sunt pariatur
-          aliquam. Rem quam qui optio et eos. Mollitia voluptas consequatur et
-          ipsa eos dolorem. Debitis ipsum expedita velit ab nam autem nam
-          quidem. Voluptas quidem velit eos.
+          {{ description }}
         </p>
       </div>
     </div>
     <div class="flex w-full">
       <div class="w-1/3">
         <h2 class="text-xl">Current Results</h2>
-        <progress class="w-full"></progress>
+        <ProgressBar :results="results" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import md5 from "md5";
+import ProgressBar from "./ProgressBar.vue";
+
 export default {
   name: "Voting Description",
+  props: ["name", "description", "options"],
+  components: {
+    ProgressBar,
+  },
+  data() {
+    return {
+      results: {
+        total: 0,
+        percentages: [],
+      },
+    };
+  },
+  mounted() {},
+  watch: {
+    options(newValue, oldValue) {
+      for (const key in newValue) {
+        this.results.total += this.options[key].optionTotalVotes;
+      }
+      for (const key in newValue) {
+        const votingPercentage =
+          (this.options[key].optionTotalVotes * 100) / this.results.total;
+        this.results.percentages.push({
+          percentage: votingPercentage,
+          color: md5(votingPercentage + "").substring(0, 6),
+        });
+      }
+    },
+  },
 };
 </script>

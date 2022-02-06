@@ -22,6 +22,12 @@ const router = createRouter({
       name: "Process",
       component: () => import("./views/Process.vue"),
     },
+    {
+      path: "/create",
+      name: "Create",
+      props: true,
+      component: () => import("./views/Create.vue"),
+    },
   ],
 });
 

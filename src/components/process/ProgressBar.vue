@@ -1,5 +1,5 @@
 <template>
-  <div class="flex w-full">
+  <div class="flex w-full pt-2">
     <div
       v-for="(option, index) in results.percentages"
       :key="index"
@@ -14,6 +14,7 @@
 
 <script>
 import md5 from "md5";
+import { mapState } from "vuex";
 
 export default {
   props: ["options"],
@@ -30,6 +31,7 @@ export default {
       for (const key in options) {
         this.results.total += this.options[key].optionTotalVotes;
       }
+      this.$store.state.totalVotings = this.results.total;
       for (const key in options) {
         const votingPercentage =
           (this.options[key].optionTotalVotes * 100) / this.results.total;
@@ -40,6 +42,7 @@ export default {
       }
     },
   },
+  computed: mapState(["totalVotings"]),
   mounted() {
     this.createBar(this.options);
   },

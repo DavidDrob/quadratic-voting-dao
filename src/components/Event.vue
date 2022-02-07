@@ -4,7 +4,12 @@
       <div class="pb-4 w-11/12">
         <h2 class="text-xl">{{ title }}</h2>
         <p class="pr-4">
-          {{ description }}
+          <span class="lg:block hidden">
+            {{ description }}
+          </span>
+          <span class="lg:hidden block">
+            {{ description.substring(0, 100) + "..." }}
+          </span>
         </p>
       </div>
       <div class="h-min">
@@ -13,7 +18,7 @@
       </div>
     </div>
     <div class="flex w-full">
-      <div class="w-1/3">
+      <div class="w-2/3">
         <h2 class="text-xl">Current Results</h2>
         <ProgressBar :options="options" />
       </div>

@@ -5,6 +5,7 @@ import registeredDAOs from "../utils/dbConnect";
 export const store = createStore({
   state: {
     blockHeight: 11565118,
+    totalVotings: 0,
     daoData: [],
   },
   actions: {

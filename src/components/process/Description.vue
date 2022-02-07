@@ -19,7 +19,7 @@
       </div>
     </div>
     <div class="flex w-full">
-      <div class="w-1/3">
+      <div class="w-2/3">
         <h2 class="text-xl">Current Results</h2>
         <ProgressBar :options="options" />
       </div>
@@ -39,26 +39,9 @@ export default {
   data() {
     return {
       results: {
-        total: 0,
         percentages: [],
       },
     };
   },
-  mounted() {},
-  // watch: {
-  //   options(newValue, oldValue) {
-  //     for (const key in newValue) {
-  //       this.results.total += this.options[key].optionTotalVotes;
-  //     }
-  //     for (const key in newValue) {
-  //       const votingPercentage =
-  //         (this.options[key].optionTotalVotes * 100) / this.results.total;
-  //       this.results.percentages.push({
-  //         percentage: votingPercentage,
-  //         color: md5(votingPercentage + "").substring(0, 6),
-  //       });
-  //     }
-  //   },
-  // },
 };
 </script>

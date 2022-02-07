@@ -5,7 +5,7 @@
     </a>
 
     <div class="m-4 mt-8 flex flex-col justify-center">
-      <h2 class="text-2xl">Current Processes</h2>
+      <h2 class="text-2xl w-full">Current Processes</h2>
       <div class="flex justify-between">
         <Description
           :name="currentVoting.name"
@@ -16,9 +16,13 @@
           :author="currentVoting.author"
           :limited="currentVoting.limited"
           :allowed="currentVoting.allowed"
+          :start="currentVoting.start"
+          :end="currentVoting.end"
         />
       </div>
     </div>
+
+    <Options :options="currentVoting.options" />
   </div>
 </template>
 
@@ -26,6 +30,7 @@
 import DaoHead from "../components/DaoHead.vue";
 import Description from "../components/process/Description.vue";
 import Details from "../components/process/Details.vue";
+import Options from "../components/process/Options.vue";
 import { mapState } from "vuex";
 
 export default {
@@ -40,6 +45,7 @@ export default {
     DaoHead,
     Description,
     Details,
+    Options,
   },
   async mounted() {
     // dao address

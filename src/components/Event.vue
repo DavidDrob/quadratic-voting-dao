@@ -48,7 +48,7 @@ export default {
   },
   mounted() {
     const end = new Date(this.end);
-    this.remainingTime = new Date().getTime() - end.getTime();
+    this.remainingTime = new Date(this.end).getTime() - new Date().getTime();
   },
   computed: {
     timeLeft() {

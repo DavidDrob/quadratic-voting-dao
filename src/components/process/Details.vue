@@ -1,5 +1,5 @@
 <template>
-  <div class="rounded-2xl my-4 p-4 border-2 border-stone-200 w-3/12">
+  <div class="rounded-2xl my-4 p-4 border-2 border-stone-200 w-4/12">
     <div class="flex justify-between">
       <p>Author</p>
       <p>{{ author }}</p>
@@ -18,11 +18,14 @@
     </div>
     <div class="flex justify-between">
       <p>Total votes</p>
-      <p>{{ totalVotings }} GTC</p>
+      <p>{{ totalVotings }} {{ symbol }}</p>
     </div>
     <div class="flex justify-between">
-      <p>Voting %</p>
-      <p>12 %</p>
+      <div class="flex">
+        <p>Voting %</p>
+        <p title="Percentage of tokens spent in the voting">&nbsp; ?</p>
+      </div>
+      <p>{{ votingPercentageTotal }} %</p>
     </div>
     <div class="flex justify-between">
       <p>Limited</p>
@@ -42,7 +45,7 @@ import { mapState } from "vuex";
 
 export default {
   name: "Voting Details",
-  props: ["author", "start", "end", "limited", "allowed"],
+  props: ["author", "start", "end", "limited", "allowed", "symbol", "options"],
   components: {
     Blockie,
   },
@@ -51,6 +54,8 @@ export default {
       formatedStart: "",
       formatedEnd: "",
       remainingTime: null,
+      votingPercentageTotal: 0,
+      total: 0,
     };
   },
   watch: {
@@ -67,7 +72,7 @@ export default {
     },
     end(newValue, oldValue) {
       const end = new Date(this.end);
-      this.remainingTime = new Date().getTime() - end.getTime();
+      this.remainingTime = new Date(this.end).getTime() - new Date().getTime();
       const options = {
         year: "numeric",
         month: "numeric",
@@ -88,7 +93,8 @@ export default {
   },
   computed: {
     timeLeft() {
-      if (this.remainingTime <= 0) {
+      if (this.remainingTime <= 0 && this.remainingTime != null) {
+        this.$emit("ended", true);
         return "Voting ended";
       } else if (convertMS(this.remainingTime).day >= 2) {
         return `${convertMS(this.remainingTime).day} days`;
@@ -101,7 +107,27 @@ export default {
         return `${convertMS(this.remainingTime).hour} hours`;
       }
     },
-    ...mapState(["totalVotings"]),
+    ...mapState(["totalVotings", "tokenSupply"]),
+  },
+  async mounted() {
+    await this.$store.dispatch("getAllDAOVotings", this.$route.params.address);
+    await this.$store.dispatch("getTokenSupply", this.$route.params.address);
+
+    for (const key in this.options) {
+      // console.log(this.options);
+      this.total += this.options[key].optionTotalVotes;
+      // console.log(this.total);
+    }
+    this.$store.state.totalVotings = this.total;
+
+    // Calculate how many tokens of the total supply were spent on the voting
+    // console.log(this.total);
+    // console.log(this.tokenSupply);
+
+    this.votingPercentageTotal = (
+      (this.totalVotings * 100) /
+      this.tokenSupply
+    ).toFixed(7);
   },
 };
 </script>

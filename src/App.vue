@@ -20,7 +20,7 @@
         </h1>
         <h2 class="text-lg mt-6 border-b-2 border-green-500">
           <a
-            href="https://wtfisqf.com/
+            href="https://www.radicalxchange.org/concepts/quadratic-voting/
         "
             >Learn more about quadratic voting here.
           </a>

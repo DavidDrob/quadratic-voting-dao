@@ -5,7 +5,7 @@
       my-4
       p-4
       border-2 border-stone-200
-      w-8/12
+      w-7/12
       flex flex-col
       justify-between
     "

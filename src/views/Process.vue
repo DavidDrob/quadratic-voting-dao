@@ -18,11 +18,20 @@
           :allowed="currentVoting.allowed"
           :start="currentVoting.start"
           :end="currentVoting.end"
+          :symbol="headerData.symbol"
+          :options="currentVoting.options"
+          @ended="hasEnded"
         />
       </div>
     </div>
 
-    <Options :options="currentVoting.options" />
+    <Options
+      v-if="votingEnded == false"
+      :options="currentVoting.options"
+      :symbol="headerData.symbol"
+      :title="currentVoting.name"
+      :ended="votingEnded"
+    />
   </div>
 </template>
 
@@ -39,6 +48,7 @@ export default {
     return {
       headerData: {},
       currentVoting: {},
+      votingEnded: false,
     };
   },
   components: {
@@ -46,6 +56,11 @@ export default {
     Description,
     Details,
     Options,
+  },
+  methods: {
+    hasEnded(value) {
+      this.votingEnded = value;
+    },
   },
   async mounted() {
     // dao address
@@ -71,6 +86,8 @@ export default {
         this.currentVoting = resp.votings[i];
       }
     }
+
+    await this.$store.dispatch("getUsersGOVTokens", this.$route.params.address);
   },
   computed: mapState(["daoData"]),
 };

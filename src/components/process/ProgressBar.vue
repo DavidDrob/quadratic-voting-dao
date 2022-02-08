@@ -37,7 +37,7 @@ export default {
           (this.options[key].optionTotalVotes * 100) / this.results.total;
         this.results.percentages.push({
           percentage: votingPercentage,
-          color: md5(votingPercentage + "").substring(0, 6),
+          color: md5(this.options[key].optionName).substring(0, 6),
         });
       }
     },

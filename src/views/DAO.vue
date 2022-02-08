@@ -11,7 +11,7 @@
         :end="voting.end"
         :options="voting.options"
       />
-      <router-link to="create" test="some value">
+      <router-link to="create">
         <div
           class="
             rounded-2xl

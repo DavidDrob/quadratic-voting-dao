@@ -68,8 +68,8 @@ export default {
     SubmitButton,
   },
   async mounted() {
-    if (daos.length > this.daoData.length) {
-      for (const i in daos) {
+    for (const i in daos) {
+      if (daos.length > this.daoData.length) {
         await this.$store.dispatch("getBasicDAOData", daos[i]);
       }
     }

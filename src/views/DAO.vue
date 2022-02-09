@@ -64,12 +64,6 @@ export default {
     DaoHead,
   },
   async mounted() {
-    const votingResponse = await this.$store.dispatch(
-      "getAllDAOVotings",
-      this.$route.params.address
-    );
-    this.daoVotings = votingResponse.votings;
-
     if (this.daoData.length == 0)
       await this.$store.dispatch("getBasicDAOData", this.$route.params.address);
 
@@ -78,6 +72,13 @@ export default {
         this.headerData = this.daoData[i];
       }
     }
+
+    // TODO: Check if there's a document for this DAO
+    const votingResponse = await this.$store.dispatch(
+      "getAllDAOVotings",
+      this.$route.params.address
+    );
+    this.daoVotings = votingResponse.votings;
   },
   computed: mapState(["daoData"]),
 };

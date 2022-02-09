@@ -84,14 +84,19 @@ export default {
   },
   mounted() {
     if (this.prevRoute != null) this.address = this.prevRoute.params.address;
-    else this.address = "Select a DAO";
+    else this.address = "";
   },
   watch: {
     async address(newValue, oldValue) {
-      await this.$store.dispatch("getBasicDAOData", newValue);
-      for (const i in this.daoData) {
-        if (this.daoData[i].address == this.address) {
-          this.newDaoData = this.daoData[i];
+      if (newValue) {
+        console.log(newValue);
+        console.log(newValue.toLowerCase());
+        const address = newValue.toLowerCase();
+        await this.$store.dispatch("getBasicDAOData", newValue);
+        for (const i in this.daoData) {
+          if (this.daoData[i].address == address) {
+            this.newDaoData = this.daoData[i];
+          }
         }
       }
     },

@@ -18,7 +18,7 @@
         <h1 class="text-4xl font-semibold text-center">
           <router-link to="/"> Covalent Quadratic Voting App </router-link>
         </h1>
-        <h2 class="text-lg mt-6 border-b-2 border-green-500">
+        <h2 class="text-lg mt-6 border-b">
           <a
             href="https://www.radicalxchange.org/concepts/quadratic-voting/
         "

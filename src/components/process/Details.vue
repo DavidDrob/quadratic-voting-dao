@@ -2,7 +2,7 @@
   <div class="rounded-2xl my-4 p-4 border-2 border-stone-200 w-4/12">
     <div class="flex justify-between">
       <p>Author</p>
-      <p>{{ author }}</p>
+      <p>{{ authorFormated }}</p>
     </div>
     <div class="flex justify-between">
       <p>Start</p>
@@ -32,8 +32,8 @@
       <p v-if="limited">Yes</p>
       <p v-else>No</p>
     </div>
-    <hr class="mt-4 mb-2" />
-    <p class="mb-2">Allowed voters</p>
+    <!-- <hr class="mt-4 mb-2" />
+    <p class="mb-2">Allowed voters</p> -->
     <!-- <Blockie v-for="(user, index) in allowed" :key="index" :address="user" /> -->
   </div>
 </template>
@@ -78,7 +78,7 @@ export default {
         month: "numeric",
         day: "numeric",
       };
-      this.formatedEnd = new Date(Date.parse(this.end)).toLocaleDateString(
+      this.formatedEnd = new Date(Date.parse(end)).toLocaleDateString(
         "en-EN",
         options
       );
@@ -106,6 +106,9 @@ export default {
       } else {
         return `${convertMS(this.remainingTime).hour} hours`;
       }
+    },
+    authorFormated() {
+      if (this.author) return this.author.substring(0, 6) + "...";
     },
     ...mapState(["totalVotings", "tokenSupply"]),
   },

@@ -87,6 +87,7 @@ export default {
       }
     }
 
+    // console.log(this.$route.params.address);
     await this.$store.dispatch("getUsersGOVTokens", this.$route.params.address);
   },
   computed: mapState(["daoData"]),

@@ -2,15 +2,15 @@
   <div class="w-2/3 m-auto mt-10" style="height: 60%">
     <h2 class="text-2xl">Create a new voting</h2>
     <div class="rounded-2xl my-4 p-4 border-2 border-stone-200">
-      <div class="flex">
+      <div class="flex justify-between">
         <!-- Main -->
-        <div class="pb-4 w-5/12">
+        <div class="pb-4 w-7/12">
           <h2 class="text-xl">DAO</h2>
           <input
             v-model="address"
             placeholder="DAO address"
             type="text"
-            class="bg-transparent border-b w-11/12"
+            class="bg-transparent border-b w-full"
           />
           <div class="my-4 flex items-center">
             <img :src="newDaoData.logo" class="w-8" />
@@ -22,38 +22,38 @@
             v-model="title"
             type="text"
             placeholder="Title"
-            class="bg-transparent border-b mb-4 w-11/12"
+            class="bg-transparent border-b mb-4 w-full"
           />
           <h2 class="text-xl">Voting Description</h2>
-          <input
+          <textarea
             v-model="description"
-            type="text"
             placeholder="description"
-            class="bg-transparent border-b mb-16 w-11/12"
-          />
+            class="bg-transparent border-b mb-16 w-full h-24 mt-2"
+          ></textarea>
 
-          <h2 class="text-xl">Voting Description</h2>
-          <input
-            v-model="description"
-            type="text"
-            placeholder="DAO address"
-            class="bg-transparent border-b w-11/12"
+          <OptionInput @addOption="addToOptionArray" class="mb-6" />
+          <Options
+            v-for="(option, index) in options"
+            :key="index"
+            :title="option"
+            @removeOption="removeFromOptionArray"
           />
+          <SubmitButton title="Create voting" @click="submit" />
         </div>
 
         <!-- Date select -->
         <div class="">
           <h2 class="text-xl">Starting Date</h2>
           <input
+            type="datetime-local"
             v-model="start"
-            type="date"
-            class="bg-transparent border-b mb-4 w-11/12"
+            class="bg-transparent border-b mb-4 w-full"
           />
           <h2 class="text-xl">Ending Date</h2>
           <input
+            type="datetime-local"
             v-model="end"
-            type="date"
-            class="bg-transparent border-b w-11/12"
+            class="bg-transparent border-b w-full"
           />
         </div>
       </div>
@@ -63,9 +63,17 @@
 
 <script>
 import { mapState } from "vuex";
+import Options from "../components/create/Options.vue";
+import OptionInput from "../components/create/OptionInput.vue";
+import SubmitButton from "../components/SubmitButton.vue";
 
 export default {
   name: "Create voting",
+  components: {
+    Options,
+    OptionInput,
+    SubmitButton,
+  },
   data() {
     return {
       address: "",
@@ -75,7 +83,75 @@ export default {
       end: "",
       prevRoute: null,
       newDaoData: [],
+      options: [],
     };
+  },
+  methods: {
+    addToOptionArray(value) {
+      this.options.push(value);
+    },
+    removeFromOptionArray(value) {
+      const index = this.options.indexOf(value);
+      if (index > -1) {
+        this.options.splice(index, 1);
+      }
+    },
+    async submit() {
+      // error checking
+      function nameIsNotDuplicate(dao, title) {
+        for (let i = 0; i < dao.votings.length; i++) {
+          const element = dao.votings[i];
+          if (element.name != title) return true;
+          else return false;
+        }
+      }
+
+      const dao = await this.$store.dispatch("getAllDAOVotings", this.address);
+      if (dao == null) {
+        //create a new document
+        // make new request
+      }
+      console.log(dao);
+
+      console.log(nameIsNotDuplicate(dao, this.title));
+
+      let newOptions = [];
+      this.options.forEach((element) => {
+        console.log(element);
+        const option = {
+          optionName: element,
+          optionTotalVotes: 0,
+        };
+        console.log(option);
+        newOptions.push(option);
+      });
+
+      if (
+        this.title &&
+        this.options.length >= 2 &&
+        this.start &&
+        this.end &&
+        nameIsNotDuplicate(dao, this.title)
+      ) {
+        console.log("error checking passed");
+        const voting = {
+          name: this.title,
+          description: this.description,
+          author: this.userAddress,
+          start: this.start,
+          end: this.end,
+          options: newOptions,
+        };
+        const daoAddress = this.address;
+        const response = await this.$store.dispatch("postNewVoting", {
+          daoAddress,
+          voting,
+        });
+        console.log(response);
+      }
+
+      // dispatch `postNewVoting` in vuex
+    },
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
@@ -89,8 +165,6 @@ export default {
   watch: {
     async address(newValue, oldValue) {
       if (newValue) {
-        console.log(newValue);
-        console.log(newValue.toLowerCase());
         const address = newValue.toLowerCase();
         await this.$store.dispatch("getBasicDAOData", newValue);
         for (const i in this.daoData) {
@@ -99,8 +173,12 @@ export default {
           }
         }
       }
+      // on submit
+      // if (this.newDaoData.address != newValue.toLowerCase()) {
+      //   alert("sorry");
+      // }
     },
   },
-  computed: mapState(["daoData"]),
+  computed: mapState(["daoData", "userAddress"]),
 };
 </script>

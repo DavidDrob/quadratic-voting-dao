@@ -57,35 +57,6 @@ export const store = createStore({
         await registeredDAOs()
       ).findOne({ daoAddress: daoAddress });
 
-      // const testVoting = {
-      //   name: "NEW",
-      //   description: "TEST",
-      //   author: "0x420",
-      //   start: "2009-12-12T23:00:00.000Z",
-      //   end: "2020-12-31T23:00:00.000Z",
-      //   options: [
-      //     {
-      //       optionName: "first",
-      //       optionTotalVotes: 42,
-      //     },
-      //     {
-      //       optionName: "second",
-      //       optionTotalVotes: 62,
-      //     },
-      //     {
-      //       optionName: "second",
-      //       optionTotalVotes: 62,
-      //     },
-      //   ],
-      //   limited: false,
-      // };
-
-      // await (
-      //   await registeredDAOs()
-      // ).updateOne(
-      //   { daoAddress: daoAddress },
-      //   { $push: { votings: testVoting } }
-      // );
       commit("GET_ALL_DAO_VOTINGS", dao);
       return dao;
     },
@@ -97,14 +68,8 @@ export const store = createStore({
           }/balances_v2/?key=${import.meta.env.VITE_COVALENT_KEY}`
         )
         .then((res) => {
-          res.data.data.items.forEach((element) => {
-            if (element.contract_address === daoAddress) {
-              commit(
-                "GET_USERS_TOKENS",
-                Math.floor(element.balance / 10 ** element.contract_decimals)
-              );
-            }
-          });
+          const responseItems = res.data.data.items;
+          commit("GET_USERS_TOKENS", { responseItems, daoAddress });
         });
     },
     async postUsersVoting(context, { daoAddress, votingObject, votingName }) {
@@ -154,6 +119,13 @@ export const store = createStore({
         );
       }
     },
+    async postNewVoting(context, { daoAddress, voting }) {
+      const updateResponse = await (
+        await registeredDAOs()
+      ).updateOne({ daoAddress: daoAddress }, { $push: { votings: voting } });
+
+      return updateResponse;
+    },
   },
   mutations: {
     GET_BLOCK_HEIGHT(state, block_height) {
@@ -167,9 +139,19 @@ export const store = createStore({
         address: response.contract_address,
       });
     },
-    GET_USERS_TOKENS(state, userTokens) {
-      state.userTokens = userTokens;
-      // state.userTokens = 100;
+    GET_USERS_TOKENS(state, payload) {
+      for (let i = 0; i < payload.responseItems.length; i++) {
+        const element = payload.responseItems[i];
+        if (element.contract_address === payload.daoAddress) {
+          console.log(element);
+          state.userTokens = Math.floor(
+            element.balance / 10 ** element.contract_decimals
+          );
+          break;
+        } else {
+          state.userTokens = 0;
+        }
+      }
     },
     GET_TOKEN_SUPPLY(state, response) {
       state.tokenSupply = response;

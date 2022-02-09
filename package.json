@@ -15,7 +15,6 @@
     "realm-web": "^1.6.0",
     "redaxios": "^0.4.1",
     "vue": "^3.2.25",
-    "vue-datepicker-ui": "^3.1.1",
     "vue-router": "^4.0.12",
     "vuex": "^4.0.2"
   },

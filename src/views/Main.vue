@@ -70,7 +70,14 @@ export default {
   async mounted() {
     for (const i in daos) {
       if (daos.length > this.daoData.length) {
-        await this.$store.dispatch("getBasicDAOData", daos[i]);
+        if (this.daoData.length == 0 || this.daoData.length == 0) {
+          await this.$store.dispatch("getBasicDAOData", daos[i]);
+        }
+        for (const j in this.daoData) {
+          if (this.daoData[j].address != daos[i]) {
+            await this.$store.dispatch("getBasicDAOData", daos[i]);
+          }
+        }
       }
     }
   },

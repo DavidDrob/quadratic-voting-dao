@@ -26,7 +26,7 @@
           </div>
           <button class="cursor-pointer w-1/6" @click="votes++">+</button>
         </div>
-        <p class="pl-4">You voted {{ voiceCreditsSpent }}</p>
+        <p class="pl-4">{{ voiceCreditsSpent }} tokens spent on this voting</p>
       </div>
     </div>
   </div>

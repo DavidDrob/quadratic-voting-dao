@@ -7,7 +7,7 @@ export const store = createStore({
     blockHeight: 11565118,
     totalVotings: 0,
     daoData: [],
-    userAddress: "0x32934dA17622faEb1F8c9fAb354fc194cF8e4378",
+    userAddress: "0xddfAbCdc4D8FfC6d5beaf154f18B778f892A0740",
     userTokens: 0,
     tokenSupply: 0,
   },
@@ -101,11 +101,10 @@ export const store = createStore({
             },
           }
         );
-
         // add user address to voted array
         const votedField = `votings.${votingIndex}.voted`;
         const address = context.state.userAddress;
-        await (
+        const done = await (
           await registeredDAOs()
         ).updateOne(
           {
@@ -117,6 +116,7 @@ export const store = createStore({
             },
           }
         );
+        if (update && done) window.location.reload();
       }
     },
     async postNewVoting(context, { daoAddress, voting }) {
@@ -143,7 +143,6 @@ export const store = createStore({
       for (let i = 0; i < payload.responseItems.length; i++) {
         const element = payload.responseItems[i];
         if (element.contract_address === payload.daoAddress) {
-          console.log(element);
           state.userTokens = Math.floor(
             element.balance / 10 ** element.contract_decimals
           );

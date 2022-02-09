@@ -36,13 +36,14 @@ export default {
     Option,
     SubmitButton,
   },
-  props: ["options", "symbol", "title", "ended"],
+  props: ["options", "symbol", "title", "ended", "voted"],
   data() {
     return {
       votingOptions: {},
       userTokensOld: 0,
       spent: 0,
       votingName: "",
+      alreadyVoted: [],
     };
   },
   methods: {
@@ -67,14 +68,18 @@ export default {
         this.userTokens - this.spent < this.userTokens
       ) {
         if (this.ended === false) {
-          const daoAddress = this.$route.params.address;
-          const votingObject = this.votingOptions;
-          const votingName = this.votingName;
-          await this.$store.dispatch("postUsersVoting", {
-            daoAddress,
-            votingObject,
-            votingName,
-          });
+          if (this.alreadyVoted.includes(this.userAddress) == false) {
+            const daoAddress = this.$route.params.address;
+            const votingObject = this.votingOptions;
+            const votingName = this.votingName;
+            await this.$store.dispatch("postUsersVoting", {
+              daoAddress,
+              votingObject,
+              votingName,
+            });
+          } else {
+            alert("You have already voted");
+          }
         } else {
           alert("Voting has already ended");
         }
@@ -96,15 +101,12 @@ export default {
     title(newValue, oldValue) {
       this.votingName = this.title;
     },
-    totalVotings(newValue, oldValue) {
-      // console.log(oldValue);
-      // console.log(newValue);
+    voted(newValue, oldValue) {
+      this.alreadyVoted = this.voted;
     },
-    userTokens(newValue, oldValue) {
-      // console.log(oldValue);
-      // console.log(newValue);
-    },
+    totalVotings(newValue, oldValue) {},
+    userTokens(newValue, oldValue) {},
   },
-  computed: mapState(["totalVotings", "userTokens"]),
+  computed: mapState(["totalVotings", "userTokens", "userAddress"]),
 };
 </script>

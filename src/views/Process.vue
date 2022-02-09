@@ -31,6 +31,7 @@
       :symbol="headerData.symbol"
       :title="currentVoting.name"
       :ended="votingEnded"
+      :voted="currentVoting.voted"
     />
   </div>
 </template>

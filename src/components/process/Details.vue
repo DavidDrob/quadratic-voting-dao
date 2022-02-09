@@ -21,16 +21,11 @@
       <p>{{ totalVotings }} {{ symbol }}</p>
     </div>
     <div class="flex justify-between">
-      <div class="flex">
+      <div class="flex" title="Percentage of tokens spent in the voting">
         <p>Voting %</p>
-        <p title="Percentage of tokens spent in the voting">&nbsp; ?</p>
+        <p class="text-xs">&nbsp; (?)</p>
       </div>
       <p>{{ votingPercentageTotal }} %</p>
-    </div>
-    <div class="flex justify-between">
-      <p>Limited</p>
-      <p v-if="limited">Yes</p>
-      <p v-else>No</p>
     </div>
     <!-- <hr class="mt-4 mb-2" />
     <p class="mb-2">Allowed voters</p> -->

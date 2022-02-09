@@ -7,7 +7,7 @@ export const store = createStore({
     blockHeight: 11565118,
     totalVotings: 0,
     daoData: [],
-    userAddress: "0xddfAbCdc4D8FfC6d5beaf154f18B778f892A0740",
+    userAddress: "",
     userTokens: 0,
     tokenSupply: 0,
   },

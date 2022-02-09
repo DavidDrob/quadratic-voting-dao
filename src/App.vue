@@ -1,8 +1,18 @@
 
 <template>
   <div class="text-zinc-100">
-    <!-- <h1>{{ blockHeight }}</h1>
-    <h1>{{ daoData }}</h1> -->
+    <div class="w-16 absolute top-2 right-2 font-bold">
+      <p v-if="userAddress">
+        {{ userAddress.substring(0, 6) }}
+      </p>
+      <img
+        v-else
+        @click="connectMetamask"
+        src="./assets/metamask.png"
+        class="cursor-pointer"
+        alt="LOGIN WITH METAMASK"
+      />
+    </div>
     <main
       class="
         bg-gradient-to-tr
@@ -36,6 +46,7 @@
 import EventCardVue from "./components/EventCard.vue";
 import DaoCard from "./components/DaoCard.vue";
 import { mapState } from "vuex";
+import { connect } from "./utils/ethersConnect";
 
 export default {
   name: "EventCard",
@@ -45,8 +56,15 @@ export default {
   },
   async mounted() {
     this.$store.dispatch("getCurrentBlockHeight");
+    this.connectMetamask();
   },
-  computed: mapState(["blockHeight", "daoData"]),
+  methods: {
+    async connectMetamask() {
+      const address = await connect();
+      this.$store.state.userAddress = address[0];
+    },
+  },
+  computed: mapState(["blockHeight", "daoData", "userAddress"]),
 };
 </script>
 

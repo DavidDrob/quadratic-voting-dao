@@ -116,8 +116,8 @@ export const store = createStore({
             },
           }
         );
-        if (update && done) window.location.reload();
       }
+      window.location.reload();
     },
     async postNewVoting(context, { daoAddress, voting }) {
       const updateResponse = await (
@@ -125,6 +125,15 @@ export const store = createStore({
       ).updateOne({ daoAddress: daoAddress }, { $push: { votings: voting } });
 
       return updateResponse;
+    },
+    async postNewDao(context, daoAddress) {
+      const newDao = await (
+        await registeredDAOs()
+      ).insertOne({
+        daoAddress: daoAddress,
+        votings: [],
+      });
+      return newDao;
     },
   },
   mutations: {

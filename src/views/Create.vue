@@ -99,6 +99,7 @@ export default {
     async submit() {
       // error checking
       function nameIsNotDuplicate(dao, title) {
+        if (dao.votings.length == 0) return true;
         for (let i = 0; i < dao.votings.length; i++) {
           const element = dao.votings[i];
           if (element.name != title) return true;
@@ -106,23 +107,27 @@ export default {
         }
       }
 
-      const dao = await this.$store.dispatch("getAllDAOVotings", this.address);
+      let dao = await this.$store.dispatch("getAllDAOVotings", this.address);
       if (dao == null) {
         //create a new document
+        const daoCreated = await this.$store.dispatch(
+          "postNewDao",
+          this.address.toLowerCase()
+        );
         // make new request
+        if (daoCreated)
+          dao = await this.$store.dispatch(
+            "getAllDAOVotings",
+            this.address.toLowerCase()
+          );
       }
-      console.log(dao);
-
-      console.log(nameIsNotDuplicate(dao, this.title));
 
       let newOptions = [];
       this.options.forEach((element) => {
-        console.log(element);
         const option = {
           optionName: element,
           optionTotalVotes: 0,
         };
-        console.log(option);
         newOptions.push(option);
       });
 
@@ -133,7 +138,6 @@ export default {
         this.end &&
         nameIsNotDuplicate(dao, this.title)
       ) {
-        console.log("error checking passed");
         const voting = {
           name: this.title,
           description: this.description,
@@ -142,15 +146,20 @@ export default {
           end: this.end,
           options: newOptions,
         };
-        const daoAddress = this.address;
+        const daoAddress = this.address.toLowerCase();
         const response = await this.$store.dispatch("postNewVoting", {
           daoAddress,
           voting,
         });
-        console.log(response);
-      }
 
-      // dispatch `postNewVoting` in vuex
+        const path = "/" + daoAddress + "/" + this.title;
+        console.log(path);
+        if (response) {
+          this.$router.push({
+            path,
+          });
+        }
+      }
     },
   },
   beforeRouteEnter(to, from, next) {

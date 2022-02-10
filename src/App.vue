@@ -85,8 +85,13 @@ export default {
       }
     },
     async networkChange() {
-      this.$store.state.chainId = this.chainIDLocal;
-      localStorage.setItem("chainId_qv", this.chainIDLocal);
+      if (this.chainIDLocal == null) {
+        localStorage.setItem("chainId_qv", 1);
+        this.$store.state.chainId = 1;
+      } else {
+        localStorage.setItem("chainId_qv", this.chainIDLocal);
+        this.$store.state.chainId = this.chainIDLocal;
+      }
       await this.getBasicDaoData();
     },
     async getBasicDaoData() {

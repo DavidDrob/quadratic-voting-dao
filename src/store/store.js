@@ -1,6 +1,6 @@
 import { createStore } from "vuex";
 import axios from "axios";
-import registeredDAOs from "../utils/dbConnect";
+import db from "../utils/dbConnect";
 
 export const store = createStore({
   state: {
@@ -10,12 +10,15 @@ export const store = createStore({
     userAddress: "",
     userTokens: 0,
     tokenSupply: 0,
+    chainId: 1,
   },
   actions: {
-    async getCurrentBlockHeight({ commit }) {
+    async getCurrentBlockHeight({ commit, state }) {
       axios
         .get(
-          `https://api.covalenthq.com/v1/1/block_v2/2021-01-01/2021-01-03/?key=${
+          `https://api.covalenthq.com/v1/${
+            state.chainId
+          }/block_v2/2021-01-01/2021-01-03/?key=${
             import.meta.env.VITE_COVALENT_KEY
           }`
         )
@@ -26,10 +29,12 @@ export const store = createStore({
           );
         });
     },
-    async getTokenSupply({ commit }, daoAddress) {
+    async getTokenSupply({ commit, state }, daoAddress) {
       await axios
         .get(
-          `https://api.covalenthq.com/v1/1/tokens/${daoAddress}/token_holders/?key=${
+          `https://api.covalenthq.com/v1/${
+            state.chainId
+          }/tokens/${daoAddress}/token_holders/?key=${
             import.meta.env.VITE_COVALENT_KEY
           }`
         )
@@ -41,21 +46,21 @@ export const store = createStore({
           );
         });
     },
-    async getBasicDAOData({ commit }, daoAddress) {
+    async getBasicDAOData({ commit, state }, daoAddress) {
       await axios
         .get(
-          `https://api.covalenthq.com/v1/pricing/historical_by_addresses_v2/1/USD/${daoAddress}/?key=${
-            import.meta.env.VITE_COVALENT_KEY
-          }`
+          `https://api.covalenthq.com/v1/pricing/historical_by_addresses_v2/${
+            state.chainId
+          }/USD/${daoAddress}/?key=${import.meta.env.VITE_COVALENT_KEY}`
         )
         .then((response) => {
           commit("GET_BASIC_DAO_DATA", response.data.data.items[0]);
         });
     },
-    async getAllDAOVotings({ commit }, daoAddress) {
-      const dao = await (
-        await registeredDAOs()
-      ).findOne({ daoAddress: daoAddress });
+    async getAllDAOVotings({ commit, state }, daoAddress) {
+      const dao = await (await db())
+        .collection(state.chainId + "")
+        .findOne({ daoAddress: daoAddress });
 
       commit("GET_ALL_DAO_VOTINGS", dao);
       return dao;
@@ -64,7 +69,7 @@ export const store = createStore({
       console.log(state.userAddress);
       axios
         .get(
-          `https://api.covalenthq.com/v1/1/address/${
+          `https://api.covalenthq.com/v1/${state.chainId}/address/${
             state.userAddress
           }/balances_v2/?key=${import.meta.env.VITE_COVALENT_KEY}`
         )
@@ -74,14 +79,12 @@ export const store = createStore({
           commit("GET_USERS_TOKENS", { responseItems, daoAddress });
         });
     },
-    async postUsersVoting(context, { daoAddress, votingObject, votingName }) {
+    async postUsersVoting({ state }, { daoAddress, votingObject, votingName }) {
       for (const i in votingObject) {
         // Get the voting and the option
         const optionName = votingObject[i].optionName;
         const optionVotes = votingObject[i].optionTotalVotes;
-        const dao = await (
-          await registeredDAOs()
-        ).findOne({
+        const dao = await (await db()).collection(state.chainId + "").findOne({
           daoAddress: daoAddress,
         });
         const votingIndex = dao.votings.findIndex((i) => i.name == votingName);
@@ -91,50 +94,50 @@ export const store = createStore({
 
         // increment votes
         const field = `votings.${votingIndex}.options.${votingOptionIndex}.optionTotalVotes`;
-        const update = await (
-          await registeredDAOs()
-        ).updateOne(
-          {
-            daoAddress: daoAddress,
-          },
-          {
-            $inc: {
-              [field]: optionVotes,
+        const update = await (await db())
+          .collection(state.chainId + "")
+          .updateOne(
+            {
+              daoAddress: daoAddress,
             },
-          }
-        );
+            {
+              $inc: {
+                [field]: optionVotes,
+              },
+            }
+          );
         // add user address to voted array
         const votedField = `votings.${votingIndex}.voted`;
         const address = context.state.userAddress;
-        const done = await (
-          await registeredDAOs()
-        ).updateOne(
-          {
-            daoAddress: daoAddress,
-          },
-          {
-            $addToSet: {
-              [votedField]: address,
+        const done = await (await db())
+          .collection(state.chainId + "")
+          .updateOne(
+            {
+              daoAddress: daoAddress,
             },
-          }
-        );
+            {
+              $addToSet: {
+                [votedField]: address,
+              },
+            }
+          );
       }
       window.location.reload();
     },
-    async postNewVoting(context, { daoAddress, voting }) {
-      const updateResponse = await (
-        await registeredDAOs()
-      ).updateOne({ daoAddress: daoAddress }, { $push: { votings: voting } });
+    async postNewVoting({ state }, { daoAddress, voting }) {
+      const updateResponse = await (await db())
+        .collection(state.chainId + "")
+        .updateOne({ daoAddress: daoAddress }, { $push: { votings: voting } });
 
       return updateResponse;
     },
-    async postNewDao(context, daoAddress) {
-      const newDao = await (
-        await registeredDAOs()
-      ).insertOne({
-        daoAddress: daoAddress,
-        votings: [],
-      });
+    async postNewDao({ state }, daoAddress) {
+      const newDao = await (await db())
+        .collection(state.chainId + "")
+        .insertOne({
+          daoAddress: daoAddress,
+          votings: [],
+        });
       return newDao;
     },
   },

@@ -59,7 +59,6 @@
 import DaoCard from "../components/DaoCard.vue";
 import SubmitButton from "../components/SubmitButton.vue";
 import { mapState } from "vuex";
-import { daos } from "../utils/daos.json";
 
 export default {
   name: "EventCard",
@@ -67,20 +66,7 @@ export default {
     DaoCard,
     SubmitButton,
   },
-  async mounted() {
-    for (const i in daos) {
-      if (daos.length > this.daoData.length) {
-        if (this.daoData.length == 0 || this.daoData.length == 0) {
-          await this.$store.dispatch("getBasicDAOData", daos[i]);
-        }
-        for (const j in this.daoData) {
-          if (this.daoData[j].address != daos[i]) {
-            await this.$store.dispatch("getBasicDAOData", daos[i]);
-          }
-        }
-      }
-    }
-  },
+
   computed: mapState(["daoData"]),
 };
 </script>

@@ -34,7 +34,6 @@
 </template>
 
 <script>
-import convertMS from "../../utils/convertMS";
 import Blockie from "./Blockie.vue";
 import { mapState } from "vuex";
 
@@ -59,31 +58,30 @@ export default {
         year: "numeric",
         month: "numeric",
         day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
       };
-      this.formatedStart = new Date(Date.parse(this.start)).toLocaleDateString(
+      this.formatedStart = new Date(Date.parse(this.start)).toLocaleString(
         "en-EN",
         options
       );
     },
     end(newValue, oldValue) {
       const end = new Date(this.end);
+
+      // Time til end of voting (miliseconds)
       this.remainingTime = new Date(this.end).getTime() - new Date().getTime();
       const options = {
         year: "numeric",
         month: "numeric",
         day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
       };
-      this.formatedEnd = new Date(Date.parse(end)).toLocaleDateString(
+      this.formatedEnd = new Date(Date.parse(end)).toLocaleString(
         "en-EN",
         options
       );
-    },
-    limited(newValue, oldValue) {
-      if (this.limited) {
-        // get balances of allowed voters gov. tokens
-        // see how many they could use to vote
-        // return how much of the amount of votings tokens of all users were used in the voting
-      }
     },
   },
   computed: {
@@ -91,15 +89,32 @@ export default {
       if (this.remainingTime <= 0 && this.remainingTime != null) {
         this.$emit("ended", true);
         return "Voting ended";
-      } else if (convertMS(this.remainingTime).day >= 2) {
-        return `${convertMS(this.remainingTime).day} days`;
-      } else if (
-        convertMS(this.remainingTime).hour <= 1 &&
-        convertMS(this.remainingTime).day > 1
-      ) {
-        return `${convertMS(this.remainingTime).minute} minutes`;
-      } else {
-        return `${convertMS(this.remainingTime).hour} hours`;
+      }
+      // 2 weeks or more
+      else if (this.remainingTime >= 1209600000) {
+        return (
+          Math.floor(Math.abs(this.remainingTime) / (1000 * 7 * 24 * 60 * 60)) +
+          " weeks"
+        );
+      }
+      // 24 hours or more
+      else if (this.remainingTime >= 86400000) {
+        return (
+          Math.floor(Math.abs(this.remainingTime) / (1000 * 24 * 60 * 60)) +
+          " days"
+        );
+      }
+      // 2 hours or more
+      else if (this.remainingTime >= 7200000) {
+        return (
+          Math.floor(Math.abs(this.remainingTime) / (1000 * 60 * 60)) + " hours"
+        );
+      }
+      // 0 ms or more
+      else if (this.remainingTime >= 0) {
+        return (
+          Math.floor(Math.abs(this.remainingTime) / (1000 * 60)) + " minutes"
+        );
       }
     },
     authorFormated() {
@@ -112,15 +127,9 @@ export default {
     await this.$store.dispatch("getTokenSupply", this.$route.params.address);
 
     for (const key in this.options) {
-      // console.log(this.options);
       this.total += this.options[key].optionTotalVotes;
-      // console.log(this.total);
     }
     this.$store.state.totalVotings = this.total;
-
-    // Calculate how many tokens of the total supply were spent on the voting
-    // console.log(this.total);
-    // console.log(this.tokenSupply);
 
     this.votingPercentageTotal = (
       (this.totalVotings * 100) /

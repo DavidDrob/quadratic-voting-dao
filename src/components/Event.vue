@@ -47,7 +47,6 @@ export default {
     ProgressBar,
   },
   mounted() {
-    const end = new Date(this.end);
     this.remainingTime = new Date(this.end).getTime() - new Date().getTime();
   },
   computed: {

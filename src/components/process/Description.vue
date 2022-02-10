@@ -18,9 +18,9 @@
         </p>
       </div>
     </div>
-    <div class="flex w-full">
+    <div class="flex w-full mb-4">
       <div class="w-2/3">
-        <h2 class="text-xl">Current Results</h2>
+        <h2 class="text-xl">Results</h2>
         <ProgressBar :options="options" />
       </div>
     </div>
@@ -32,7 +32,7 @@ import ProgressBar from "./ProgressBar.vue";
 
 export default {
   name: "Voting Description",
-  props: ["name", "description", "options"],
+  props: ["name", "symbol", "description", "options"],
   components: {
     ProgressBar,
   },

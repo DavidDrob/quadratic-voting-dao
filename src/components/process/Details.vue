@@ -16,6 +16,7 @@
       <p>Time left</p>
       <p>{{ timeLeft }}</p>
     </div>
+    <hr class="mt-4 mb-2" />
     <div class="flex justify-between">
       <p>Total votes</p>
       <p>{{ totalVotings }} {{ symbol }}</p>
@@ -27,22 +28,16 @@
       </div>
       <p>{{ votingPercentageTotal }} %</p>
     </div>
-    <!-- <hr class="mt-4 mb-2" />
-    <p class="mb-2">Allowed voters</p> -->
-    <!-- <Blockie v-for="(user, index) in allowed" :key="index" :address="user" /> -->
   </div>
 </template>
 
 <script>
-import Blockie from "./Blockie.vue";
 import { mapState } from "vuex";
 
 export default {
   name: "Voting Details",
   props: ["author", "start", "end", "limited", "allowed", "symbol", "options"],
-  components: {
-    Blockie,
-  },
+
   data() {
     return {
       formatedStart: "",

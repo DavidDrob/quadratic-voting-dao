@@ -19,7 +19,7 @@
     </div>
     <div class="flex w-full">
       <div class="w-2/3">
-        <h2 class="text-xl">Current Results</h2>
+        <h2 class="text-xl">Results</h2>
         <ProgressBar :options="options" />
       </div>
       <router-link class="ml-auto" :to="this.$route.path + '/' + this.title">

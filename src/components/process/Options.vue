@@ -21,6 +21,9 @@
         @updateVotingOptions="updateOptions"
       />
       <SubmitButton title="Submit" @click="confirmVoting" class="w-1/4" />
+      <h1 v-if="success" class="font-semibold text-green-400 pt-2">
+        You have successfuly voted! You're being redirected
+      </h1>
     </div>
   </div>
 </template>
@@ -44,6 +47,7 @@ export default {
       spent: 0,
       votingName: "",
       alreadyVoted: [],
+      success: false,
     };
   },
   methods: {
@@ -69,6 +73,7 @@ export default {
       ) {
         if (this.ended === false) {
           if (this.alreadyVoted.includes(this.userAddress) == false) {
+            this.success = true;
             const daoAddress = this.$route.params.address;
             const votingObject = this.votingOptions;
             const votingName = this.votingName;

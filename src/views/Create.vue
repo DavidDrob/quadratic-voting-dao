@@ -39,6 +39,10 @@
             @removeOption="removeFromOptionArray"
           />
           <SubmitButton title="Create voting" @click="submit" />
+          <h1 v-if="success" class="font-semibold text-green-400 pt-2">
+            You have successfuly created a new voting process! You're being
+            redirected
+          </h1>
         </div>
 
         <!-- Date select -->
@@ -84,6 +88,7 @@ export default {
       prevRoute: null,
       newDaoData: [],
       options: [],
+      success: false,
     };
   },
   methods: {
@@ -138,6 +143,8 @@ export default {
         this.end &&
         nameIsNotDuplicate(dao, this.title)
       ) {
+        this.success = true;
+
         const voting = {
           name: this.title,
           description: this.description,

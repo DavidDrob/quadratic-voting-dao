@@ -78,6 +78,11 @@ export default {
       "getAllDAOVotings",
       this.$route.params.address
     );
+    votingResponse.votings.sort((a, b) => {
+      if (a.end > b.end) return -1;
+      if (a.end < b.end) return 1;
+      return 0;
+    });
     this.daoVotings = votingResponse.votings;
   },
   computed: mapState(["daoData"]),

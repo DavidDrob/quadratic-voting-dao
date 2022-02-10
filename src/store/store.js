@@ -112,7 +112,7 @@ export const store = createStore({
           );
         // add user address to voted array
         const votedField = `votings.${votingIndex}.voted`;
-        const address = context.state.userAddress;
+        const address = state.userAddress;
         const done = await (await db())
           .collection(state.chainId + "")
           .updateOne(

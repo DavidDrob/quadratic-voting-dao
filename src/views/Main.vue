@@ -61,7 +61,7 @@ import SubmitButton from "../components/SubmitButton.vue";
 import { mapState } from "vuex";
 
 export default {
-  name: "EventCard",
+  name: "Main",
   components: {
     DaoCard,
     SubmitButton,

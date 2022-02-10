@@ -79,6 +79,10 @@ export const store = createStore({
           commit("GET_USERS_TOKENS", { responseItems, daoAddress });
         });
     },
+    async getAllDAOs({ state }) {
+      const daos = await (await db()).collection(state.chainId + "").find({});
+      return daos;
+    },
     async postUsersVoting({ state }, { daoAddress, votingObject, votingName }) {
       for (const i in votingObject) {
         // Get the voting and the option

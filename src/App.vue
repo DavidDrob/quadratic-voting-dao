@@ -55,21 +55,19 @@
 </template>
 
 <script>
-import EventCardVue from "./components/EventCard.vue";
 import DaoCard from "./components/DaoCard.vue";
 import { mapState } from "vuex";
 import { connect } from "./utils/ethersConnect";
-import { daos } from "./utils/daos.json";
 
 export default {
-  name: "EventCard",
+  name: "App",
   components: {
-    EventCardVue,
     DaoCard,
   },
   data() {
     return {
       chainIDLocal: 1,
+      daos: [],
     };
   },
   // async mounted() {
@@ -92,9 +90,14 @@ export default {
       await this.getBasicDaoData();
     },
     async getBasicDaoData() {
+      this.daos = [];
+      const response = await this.$store.dispatch("getAllDAOs");
+      response.forEach((dao) => {
+        this.daos.push(dao.daoAddress);
+      });
       this.$store.state.daoData = [];
-      for (const i in daos) {
-        await this.$store.dispatch("getBasicDAOData", daos[i]);
+      for (const i in this.daos) {
+        await this.$store.dispatch("getBasicDAOData", this.daos[i]);
       }
     },
   },

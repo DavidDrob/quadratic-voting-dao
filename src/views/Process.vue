@@ -64,12 +64,6 @@ export default {
     },
   },
   async mounted() {
-    // dao address
-    // console.log(this.$route.params.address);
-
-    // voting name
-    // console.log(this.$route.params._id);
-
     if (this.daoData.length == 0)
       await this.$store.dispatch("getBasicDAOData", this.$route.params.address);
 
@@ -83,6 +77,9 @@ export default {
       this.$route.params.address
     );
     for (const i in resp.votings) {
+      console.log(resp.votings[i].name);
+      console.log(this.$route.params._id);
+
       if (resp.votings[i].name == this.$route.params._id) {
         this.currentVoting = resp.votings[i];
       }

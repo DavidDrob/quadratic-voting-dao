@@ -103,7 +103,6 @@ export default {
   },
   mounted() {
     this.chainIDLocal = localStorage.getItem("chainId_qv");
-    console.log(this.chainIDLocal);
     this.connectMetamask();
     this.networkChange();
   },

@@ -160,7 +160,6 @@ export default {
         });
 
         const path = "/" + daoAddress + "/" + this.title;
-        console.log(path);
         if (response) {
           this.$router.push({
             path,

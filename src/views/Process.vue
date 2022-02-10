@@ -77,15 +77,11 @@ export default {
       this.$route.params.address
     );
     for (const i in resp.votings) {
-      console.log(resp.votings[i].name);
-      console.log(this.$route.params._id);
-
       if (resp.votings[i].name == this.$route.params._id) {
         this.currentVoting = resp.votings[i];
       }
     }
 
-    // console.log(this.$route.params.address);
     await this.$store.dispatch("getUsersGOVTokens", this.$route.params.address);
   },
   computed: mapState(["daoData"]),

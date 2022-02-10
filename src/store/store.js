@@ -66,7 +66,6 @@ export const store = createStore({
       return dao;
     },
     async getUsersGOVTokens({ commit, state }, daoAddress) {
-      console.log(state.userAddress);
       axios
         .get(
           `https://api.covalenthq.com/v1/${state.chainId}/address/${
@@ -74,7 +73,6 @@ export const store = createStore({
           }/balances_v2/?key=${import.meta.env.VITE_COVALENT_KEY}`
         )
         .then((res) => {
-          console.log(res);
           const responseItems = res.data.data.items;
           commit("GET_USERS_TOKENS", { responseItems, daoAddress });
         });
@@ -173,8 +171,6 @@ export const store = createStore({
     GET_TOKEN_SUPPLY(state, response) {
       state.tokenSupply = response;
     },
-    GET_ALL_DAO_VOTINGS(state, dao) {
-      // console.log(dao);
-    },
+    GET_ALL_DAO_VOTINGS(state, dao) {},
   },
 });

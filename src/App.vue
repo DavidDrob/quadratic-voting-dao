@@ -61,7 +61,7 @@ export default {
   methods: {
     async connectMetamask() {
       const address = await connect();
-      this.$store.state.userAddress = address[0];
+      if (address) this.$store.state.userAddress = address[0];
     },
   },
   computed: mapState(["blockHeight", "daoData", "userAddress"]),

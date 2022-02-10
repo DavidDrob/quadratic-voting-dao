@@ -106,6 +106,19 @@ export default {
     },
     totalVotings(newValue, oldValue) {},
     userTokens(newValue, oldValue) {},
+    async userAddress(newValue, oldValue) {
+      console.log(oldValue);
+      console.log(newValue);
+      const response = await this.$store.dispatch(
+        "getUsersGOVTokens",
+        this.$route.params.address
+      );
+      console.log(await response);
+      // await this.$store.dispatch(
+      //   "getUsersGOVTokens",
+      //   this.$route.params.address
+      // );
+    },
   },
   computed: mapState(["totalVotings", "userTokens", "userAddress"]),
 };

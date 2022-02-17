@@ -54,7 +54,8 @@ export const store = createStore({
           }/USD/${daoAddress}/?key=${import.meta.env.VITE_COVALENT_KEY}`
         )
         .then((response) => {
-          commit("GET_BASIC_DAO_DATA", response.data.data.items[0]);
+	  console.log(response);
+          commit("GET_BASIC_DAO_DATA", response.data.data[0]);
         });
     },
     async getAllDAOVotings({ commit, state }, daoAddress) {
